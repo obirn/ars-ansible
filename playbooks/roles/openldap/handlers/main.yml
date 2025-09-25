@@ -1,0 +1,7 @@
+---
+- name: Restart slapd
+  systemd:
+    name: slapd
+    state: restarted
+    enabled: yes
+  tags: service

@@ -1,0 +1,24 @@
+# Authentication configuration
+
+# Disable plaintext authentication when SSL is enabled
+disable_plaintext_auth = no
+
+# Authentication mechanisms
+auth_mechanisms = plain login
+
+passdb {
+  driver = ldap
+  args = /etc/dovecot/dovecot-ldap.conf.ext
+}
+
+##userdb {
+##  driver = ldap
+##  args = /etc/dovecot/dovecot-ldap.conf.ext
+##}
+userdb {
+  driver = static
+  args = uid=vmail gid=vmail home=/var/mail/vmail/%u
+}
+
+auth_verbose = yes
+auth_debug = yes

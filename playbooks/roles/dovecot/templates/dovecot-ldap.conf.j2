@@ -1,0 +1,21 @@
+# Configuration LDAP vers le proxy OpenLDAP
+
+uris = ldap://127.0.0.1:389
+base = OU=Users_Network,DC=epitaf,DC=local
+
+dn = CN=AD_User,OU=Users_Network,DC=epitaf,DC=local
+dnpass = REDACTED
+
+# Configuration LDAP
+ldap_version = 3
+auth_bind = yes
+
+user_filter = (&(objectClass=user)(sAMAccountName=%u))
+pass_filter = (&(objectClass=user)(sAMAccountName=%u))
+
+#user_attrs = maildir:~/Maildir
+user_attrs = =home=/var/mail/vmail/%u
+
+tls = no
+scope = subtree
+deref = never

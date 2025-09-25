@@ -1,0 +1,20 @@
+# Service definitions
+service imap-login {
+  inet_listener imap {
+    address = {{ dovecot_listen_address }}
+    port = {{ dovecot_imap_port }}
+  }
+  inet_listener imaps {
+    address = {{ dovecot_listen_address }}
+    port = {{ dovecot_imaps_port }}
+    ssl = yes
+  }
+}
+
+service auth {
+  unix_listener auth-userdb {
+    mode = 0666
+    user = postfix
+    group = postfix
+  }
+}

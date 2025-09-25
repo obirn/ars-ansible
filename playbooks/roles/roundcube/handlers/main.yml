@@ -1,0 +1,27 @@
+---
+- name: Import database
+  community.mysql.mysql_db:
+    name: "{{ roundcube_mysql_db }}"
+    state: import
+    target: "{{ roundcube_working_dir }}/current/SQL/mysql.initial.sql"
+    login_unix_socket: /run/mysqld/mysqld.sock
+
+- name: Update database for getmail
+  community.mysql.mysql_db:
+    name: "{{ roundcube_mysql_db }}"
+    state: import
+    target: "{{ roundcube_working_dir }}/current/plugins/getmail/drivers/database/SQL/mysql.initial.sql"
+    login_unix_socket: /run/mysqld/mysqld.sock
+
+- name: Restart apache
+  become: true
+  ansible.builtin.service:
+    name: apache2
+    state: restarted
+
+- name: Restart php-fpm
+  ansible.builtin.service:
+    name: "{{ ansible_facts.services | select('search', '-fpm.service') | first }}"
+    state: restarted
+  listen: Restart webserver
+  when: ansible_facts.services is search("-fpm.service")

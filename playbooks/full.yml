@@ -2,15 +2,27 @@
 - name: Load and execute every role
   hosts: webservers
   tasks:
-    - name: Load and execute NGINX role
+    #- name: Load and execute POSTFIX role
+    #  ansible.builtin.include_role:
+    #    name: postfix
+    - name: Load and execute DOVECOT role
       ansible.builtin.include_role:
-        name: nginx
-    - name: Load and execute APACHE role
+        name: dovecot
+    - name: Load and execute OPENLDAP role
       ansible.builtin.include_role:
-        name: apache
-    - name: Load and execute SSH role
+        name: openldap
+    - name: Load and execute ROUNDCUBE role
       ansible.builtin.include_role:
-        name: ssh
-    - name: Load and execute FAIL2BAN role
-      ansible.builtin.include_role:
-        name: fail2ban
+        name: roundcube
+    #- name: Load and execute APACHE role
+    #  ansible.builtin.include_role:
+    #    name: apache
+    #- name: Load and execute NGINX role
+    #  ansible.builtin.include_role:
+    #    name: nginx
+    #- name: Load and execute SSH role
+    #  ansible.builtin.include_role:
+    #    name: ssh
+    #- name: Load and execute FAIL2BAN role
+    #  ansible.builtin.include_role:
+    #    name: fail2ban

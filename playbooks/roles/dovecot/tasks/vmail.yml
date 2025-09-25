@@ -1,0 +1,36 @@
+# tasks/dovecot.yml
+- name: Create vmail group
+  group:
+    name: vmail
+    gid: 5000
+    state: present
+
+- name: Create vmail user
+  user:
+    name: vmail
+    uid: 5000
+    group: vmail
+    home: /var/mail/vmail
+    shell: /bin/false
+    system: yes
+    create_home: no
+    state: present
+
+- name: Create vmail directory structure
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: vmail
+    group: vmail
+    mode: '0750'
+  loop:
+    - /var/mail/vmail
+    - /var/mail/vmail/tmp
+
+- name: Set permissions on vmail directory
+  file:
+    path: /var/mail/vmail
+    owner: vmail
+    group: vmail
+    mode: '0750'
+    recurse: yes

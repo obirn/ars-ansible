@@ -1,0 +1,79 @@
+---
+- name: Installer OpenLDAP et les dépendances
+  apt:
+    name:
+      - slapd
+      - ldap-utils
+    state: present
+    update_cache: yes
+  tags: installation
+
+- name: Arrêter le service slapd pour configuration
+  systemd:
+    name: slapd
+    state: stopped
+  tags: configuration
+
+- name: Désactiver la configuration par défaut (si existante)
+  file:
+    path: /etc/ldap/slapd.d
+    state: absent
+  ignore_errors: yes
+  tags: configuration
+
+- name: Créer le fichier de configuration slapd.conf
+  template:
+    src: slapd.conf.j2
+    dest: /etc/ldap/slapd.conf
+    owner: root
+    group: openldap
+    mode: '0640'
+  tags: configuration
+
+- name: Tester la syntaxe de slapd.conf
+  command: slapd -Tt -f /etc/ldap/slapd.conf
+  register: config_test
+  changed_when: false
+  tags: configuration
+
+- name: Démarrer et activer le service slapd
+  systemd:
+    name: slapd
+    state: started
+    enabled: yes
+  tags: service
+
+- name: Attendre que le service soit opérationnel
+  wait_for:
+    port: "{{ openldap_port }}"
+    delay: 5
+    timeout: 30
+  tags: service
+
+- name: Tester la connexion proxy locale
+  command: >
+    ldapsearch -x -H ldaps://{{ ad_server }}:{{ ad_port }} -b '{{ openldap_base_dn }}'
+    -D '{{ openldap_bind_dn }}' -w '{{ openldap_bind_password }}'
+    '(sAMAccountName=ad_user)' dn
+  register: proxy_test
+  changed_when: false
+  tags: test
+
+- name: Afficher le résultat du test proxy
+  debug:
+    var: proxy_test.stdout
+  tags: test
+
+- name: Tester la résolution via le proxy
+  command: >
+    ldapsearch -x -H ldaps://{{ ad_server }}:{{ ad_port }} -b "{{ openldap_base_dn }}"
+    -D "{{ openldap_bind_dn }}" -w "{{ openldap_bind_password }}"
+    "(sAMAccountName=ad_user)" cn mail
+  register: resolution_test
+  changed_when: false
+  tags: test
+
+- name: Afficher le résultat de la résolution
+  debug:
+    var: resolution_test.stdout
+  tags: test

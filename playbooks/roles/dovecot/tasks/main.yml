@@ -1,0 +1,83 @@
+---
+- name: Installation des paquets Dovecot
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop:
+    - dovecot-core
+    - dovecot-imapd
+    - dovecot-ldap
+    - dovecot-mysql
+  tags: installation
+
+- name: Create vmail structure
+  ansible.builtin.include_tasks: vmail.yml
+
+- name: Création des répertoires de configuration
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - /etc/dovecot/conf.d
+  tags: configuration
+
+- name: Application de la configuration Dovecot principale
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "/etc/dovecot/{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - "dovecot.conf"
+    - "dovecot-ldap.conf"
+  notify: restart dovecot
+  tags: configuration
+
+- name: Application de la configuration Dovecot supplémentaire
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "/etc/dovecot/{{ item }}.ext"
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - "dovecot.conf"
+    - "dovecot-ldap.conf"
+  notify: restart dovecot
+  tags: configuration
+
+- name: Configuration de l'authentification
+  ansible.builtin.template:
+    src: conf.d/{{ item }}.j2
+    dest: /etc/dovecot/conf.d/{{ item}}
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - "10-auth.conf"
+    - "10-mail.conf"
+    - "10-master.conf"
+    - "10-ssl.conf"
+    - "10-logging.conf"
+    - "auth-ldap.conf.ext"
+    - "auth-system.conf.ext"
+  notify: restart dovecot
+  tags: configuration
+
+- name: Tester la configuration de Dovecot
+  ansible.builtin.command: dovecot -n
+  register: config_test
+  changed_when: false
+  tags: configuration
+
+- name: Démarrage et activation du service Dovecot
+  ansible.builtin.systemd:
+    name: dovecot
+    state: started
+    enabled: yes
+  tags: service

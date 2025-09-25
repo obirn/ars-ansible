@@ -55,12 +55,12 @@
       loop:
         - { name: "{{ kerberos_conf }}"}
 
-    - name: Configuration des ports 8000 et 10000
+    - name: Configuration des ports
       ansible.builtin.lineinfile:
         path: /etc/apache2/ports.conf
         line: "Listen {{ item }}"
         state: present
-      loop: [8000, 10000]
+      loop: [8000, 10000, 10001]
       notify: Restart apache2
 
     - name: Le dossier de log existe
@@ -155,19 +155,19 @@
         mode: '0644'
       tags: [apache2]
 
-    - name: Copier la chaîne de certificats TLS
-      ansible.builtin.copy:
-        src: "ssl/fullchain-nginx.pem"
-        dest: "/etc/ssl/certs/"
-        owner: www-data
-        mode: '0644'
-
-    - name: Copier la clé privée TLS
-      ansible.builtin.copy:
-        src: "ssl/nginx.key"
-        dest: "/etc/ssl/private/"
-        owner: www-data
-        mode: '0644'
+    #- name: Copier la chaîne de certificats TLS
+    #  ansible.builtin.copy:
+    #    src: "ssl/fullchain-nginx.pem"
+    #    dest: "/etc/ssl/certs/"
+    #    owner: www-data
+    #    mode: '0644'
+#
+    #- name: Copier la clé privée TLS
+    #  ansible.builtin.copy:
+    #    src: "ssl/nginx.key"
+    #    dest: "/etc/ssl/private/"
+    #    owner: www-data
+    #    mode: '0644'
 
     # Configuration MATOMO
     - name: Télécharger Matomo
@@ -196,6 +196,8 @@
       loop:
         - { name: "{{ http_conf }}" }
         - { name: "{{ https_conf }}" }
+        - { name: "000-default.conf" }
+        - { name: "{{ roundcube_conf }}" }
       notify: Restart apache2
 
     - name: Activation des sites avec un symlink
@@ -208,6 +210,8 @@
       loop:
         - { name: "{{ http_conf }}" }
         - { name: "{{ https_conf }}" }
+        - { name: "000-default.conf" }
+        - { name: "{{ roundcube_conf }}" }
       notify: Restart apache2
 
     # MySQL Configuration

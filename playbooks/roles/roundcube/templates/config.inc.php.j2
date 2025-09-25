@@ -1,0 +1,84 @@
+<?php
+
+// ----------------------------------------
+// CONFIGURATION FOR ROUNDCUBE
+// ----------------------------------------
+$config['db_dsnw'] = '{{ roundcube_db_dsnw }}';
+$config['default_host'] = '{{ roundcube_default_host }}';
+
+$config['log_driver'] = 'file';
+$config['log_dir'] = '/var/log/roundcube';
+$config['debug_level'] = 1;
+$config['log_file'] = 'errors.log';
+
+// ----------------------------------------
+// POSTFIX CONFIGURATION FOR ROUNDCUBE
+// ----------------------------------------
+$config['smtp_server'] = '{{ roundcube_smtp_server }}';
+$config['smtp_port'] = {{ roundcube_smtp_port }};
+
+// Désactiver l'authentification SMTP anonyme
+$config['smtp_auth_type'] = 'LOGIN';
+
+// Utiliser le même nom d'utilisateur et mot de passe pour IMAP et SMTP
+$config['smtp_user'] = '%u';
+$config['smtp_pass'] = '%p';
+
+$config['smtp_debug'] = true;
+
+
+// ----------------------------------------
+// DOVECOT CONFIGURATION FOR ROUNDCUBE
+// ----------------------------------------
+##$config['default_host'] = 'ssl://127.0.0.1';
+##$config['default_port'] = 993;
+$config['default_host'] = '127.0.0.1';
+$config['default_port'] = 143;
+
+$config['imap_auth_type'] = 'LOGIN';
+$config['username_domain'] = '';
+
+$config['imap_conn_options'] = array(
+    'ssl' => array(
+        'verify_peer' => false,
+        'verify_peer_name' => false
+        #'allow_self_signed' => true
+    )
+);
+$config['imap_debug'] = true;
+
+
+$config['create_default_folders'] = true;
+$config['default_imap_folders'] = array('INBOX', 'Drafts', 'Sent', 'Junk', 'Trash');
+
+// Désactiver la création automatique d'utilisateurs
+$config['auto_create_user'] = true;
+
+
+// ----------------------------------------
+// OPENLDAP CONFIGURATION FOR ROUNDCUBE
+// ----------------------------------------
+
+$config['login_ldap'] = false;
+/* $config['login_ldap'] = true;
+$config['ldap_public']['global'] = array(
+    'hosts' => array('127.0.0.1'),      // Proxy OpenLDAP local
+    'port' => 389,                      // Port standard LDAP
+    'base_dn' => '{{ roundcube_ldap_base_dn }}',
+    #'bind_dn' => '{{ roundcube_ldap_bind_dn_bis }}',
+    #'bind_pass' => '{{ roundcube_ldap_bind_password }}',
+    'bind_dn' => '{{ roundcube_ldap_bind_dn_bis }}',
+    'bind_pass' => '{{ roundcube_ldap_bind_password }}',
+    'user_specific' => false,
+    'search_fields' => array('sAMAccountName'),
+    #'search_fields' => array('mail', 'cn', 'sAMAccountName', 'userPrincipalName'),
+    'filter' => '(&(objectClass=user)(!(memberOf=CN=Domain Admins,CN=Users,DC=epitaf,DC=local)))',
+    'writable' => false,
+    'ldap_version' => 3,
+    'scope' => 'sub',
+    'encryption' => 'none',
+    'ssl_verify_peer' => false,
+    'ssl_verify_peer_name' => false
+);
+*/
+?>

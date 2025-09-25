@@ -15,14 +15,17 @@ wordpress_version: "6.4.2"
 wordpress_url: "https://wordpress.org/wordpress-{{ wordpress_version }}.tar.gz"
 wordpress_root: "/var/www/wordpress"
 
-http_host: "blog.epitaf.local"
+http_host: "192.168.3.2"
 https_host: "192.168.3.2"
-http_root: "/var/www/html"
-https_root: "/var/www/html"
+http_root: "/var/www"
+https_root: "/var/www"
 http_conf: "http-vhost.conf"
 https_conf: "https-vhost.conf"
 http_port: "8000"
 https_port: "10000"
+
+# RoundCube Configuration
+roundcube_conf: "roundcube.conf"
 
 # MySQL Settings
 mysql_root_password: "root_password"
@@ -31,8 +34,8 @@ mysql_user: "infra_01"
 mysql_password: "password"
 
 # TLS
-ssl_cert: "/etc/ssl/certs/fullchain-nginx.pem"
-ssl_key: "/etc/ssl/private/nginx.key"
+ssl_cert: "/etc/ssl/certs/fullchain.pem"
+ssl_key: "/etc/ssl/private/infra01_v2.key"
 
 # Kerberos
 kerberos_conf: "krb5.conf"

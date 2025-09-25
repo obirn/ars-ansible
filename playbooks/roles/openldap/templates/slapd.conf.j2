@@ -1,0 +1,51 @@
+# OpenLDAP configuration file
+include         /etc/ldap/schema/core.schema
+include         /etc/ldap/schema/cosine.schema
+include         /etc/ldap/schema/nis.schema
+include         /etc/ldap/schema/inetorgperson.schema
+
+# Logging
+loglevel        256
+logfile         /var/log/ldap/slapd.log
+
+# Module loading
+modulepath      /usr/lib/ldap
+moduleload      back_ldap
+moduleload      syncprov
+
+# PID file
+pidfile         /var/run/slapd/slapd.pid
+argsfile        /var/run/slapd/slapd.args
+
+# Proxy configuration to AD
+database        ldap
+suffix          "{{ openldap_base_dn }}"
+rootdn          "{{ openldap_bind_dn_bis }}"
+rootpw          "{{ openldap_bind_password }}"
+
+
+# TLS settings for backend connection
+TLSVerifyClient never
+TLSCACertificateFile {{ ssl_cert }}
+
+
+# Connection to AD DC01
+uri             ldaps://{{ ad_server }}:{{ ad_port }}/
+
+# Configuration d'authentification avancée
+idassert-bind   bindmethod=simple
+                binddn="{{ openldap_bind_dn_bis }}"
+                credentials="{{ openldap_bind_password }}"
+                mode=self
+
+idassert-authzFrom "*"
+
+lastmod         off
+readonly        yes
+
+# Referral chasing
+chase-referrals no
+
+
+
+sasl-secprops   none

@@ -1,0 +1,42 @@
+# Mailbox locations and namespaces
+mail_location = {{ mail_location }}
+mail_home = /var/mail/vmail/%u
+mail_privileged_group = {{ mail_privileged_group }}
+
+#mail_plugins = autocreate
+#
+#plugin {
+#  autocreate = Trash
+#  autocreate2 = Sent
+#  autocreate3 = Drafts
+#  autocreate4 = Junk
+#  autosubscribe = Trash
+#  autosubscribe2 = Sent
+#  autosubscribe3 = Drafts
+#  autosubscribe4 = Junk
+#}
+
+# Namespace configuration
+namespace inbox {
+  inbox = yes
+  
+  mailbox Drafts {
+    auto = subscribe
+    special_use = \Drafts
+  }
+  
+  mailbox Sent {
+    auto = subscribe
+    special_use = \Sent
+  }
+  
+  mailbox Junk {
+    auto = subscribe
+    special_use = \Junk
+  }
+  
+  mailbox Trash {
+    auto = subscribe
+    special_use = \Trash
+  }
+}

@@ -1,0 +1,16 @@
+---
+dovecot_listen_address: "127.0.0.1"
+dovecot_imap_port: 143
+dovecot_imaps_port: 993
+
+# Variables pour la connexion à MySQL
+#dovecot_sql_host: "localhost"
+#dovecot_sql_db: "roundcube"  # Base de données MySQL existante pour WordPress et Roundcube
+#dovecot_sql_user: "roundcube"
+#dovecot_sql_password: "REDACTED"
+
+
+mail_location: "maildir:~/Maildir"
+mail_privileged_group: "vmail"
+ssl_cert_path: "/etc/ssl/certs/fullchain.pem"
+ssl_key_path: "/etc/ssl/private/infra01_v2.key"

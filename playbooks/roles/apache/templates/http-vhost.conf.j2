@@ -12,6 +12,8 @@
    # WordPress
    <Directory {{ http_root }}>
         Options -Indexes
+        AllowOverride All
+        Require all granted
    </Directory>
    <IfModule mod_dir.c>
        DirectoryIndex index.php index.html index.cgi index.pl  index.xhtml index.html

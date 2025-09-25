@@ -1,0 +1,20 @@
+# LDAP Defaults
+
+# ========== CONFIGURATION CLIENT LDAP ==========
+BASE    {{ ad_base_dn }}
+URI     ldap://{{ openldap_listen_ip }}:{{ openldap_port }}
+
+# TLS configuration (if needed)
+TLS_REQCERT never
+
+referrals = off
+
+# Bind credentials
+BINDDN  {{ openldap_bind_dn_bis }} #{{ ad_bind_dn }}
+BINDPW  {{ openldap_bind_password }} #{{ ad_bind_password }}
+
+# Timeouts
+TIMELIMIT   30
+TIMEOUT     5
+
+VERSION 3

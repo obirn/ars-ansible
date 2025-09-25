@@ -1,0 +1,27 @@
+---
+# Configuration OpenLDAP
+openldap_version: "2.4"
+openldap_listen_ip: "127.0.0.1"
+openldap_port: 389
+
+# Configuration AD DC01
+ad_server: "192.168.2.2"
+ad_port: 636 #389
+ad_base_dn: "OU=Users_Network,DC=epitaf,DC=local"
+ad_bind_dn: "CN=DC01,CN=Domain Controllers,{{ ad_base_dn }}"
+ad_bind_password: "REDACTED"
+
+# Filtrage des comptes administrateurs
+ad_admin_filter: "(&(objectClass=user)(!(memberOf=CN=Users,CN=AD_user,{{ ad_base_dn }})))"
+
+# Configuration OpenLDAP locale
+openldap_base_dn: "{{ ad_base_dn }}"
+openldap_bind_dn_bis: "CN=AD_User,OU=Users_Network,{{ ad_base_dn }}"
+openldap_bind_dn: "ad_user@epitaf.local"
+##openldap_bind_dn_bis: "CN=ldap-proxy,OU=Users_Network,{{ ad_base_dn }}"
+##openldap_bind_dn: "ldap-proxy@epitaf.local"
+openldap_bind_password: "{{ vault_ldap_admin_password}}"
+
+vault_ldap_admin_password: "REDACTED"
+
+ssl_cert: "/etc/ssl/certs/ca-certificates.crt"

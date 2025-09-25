@@ -1,0 +1,8 @@
+myhostname = {{ postfix_myhostname }}
+mydomain = {{ postfix_mydomain }}
+myorigin = $mydomain
+inet_interfaces = {{ postfix_inet_interfaces }}
+mydestination = {{ postfix_mydestination }}
+relayhost = {{ postfix_relayhost }}
+mynetworks = {{ postfix_mynetworks }}
+smtpd_banner = {{ postfix_smtpd_banner }}

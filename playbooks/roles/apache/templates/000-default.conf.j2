@@ -1,0 +1,13 @@
+<VirtualHost *:8000>
+    ServerName blog.epitaf.local
+    DocumentRoot /var/www/wordpress
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    <Directory /var/www/wordpress>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>

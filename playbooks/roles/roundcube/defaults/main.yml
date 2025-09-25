@@ -1,0 +1,97 @@
+---
+# Variables globales
+domain_name: "epitaf.local"
+ldap_server: "127.0.0.1"
+ldap_port: 389
+ldap_bind_dn: "cn=admin,dc=example,dc=com"
+ldap_bind_pw: "password"
+ldap_base_dn: "dc=example,dc=com"
+mysql_root_password: "mysql_root_password"
+
+# Variables pour Roundcube - Postfix
+roundcube_mysql_user: "roundcube"
+roundcube_mysql_password: "REDACTED"
+roundcube_mysql_db: "roundcube"
+roundcube_db_dsnw: "mysql://{{ roundcube_mysql_user }}:{{ roundcube_mysql_password }}@localhost/{{ roundcube_mysql_db }}"
+roundcube_default_host: "localhost"
+roundcube_smtp_server: "127.0.0.1"
+roundcube_smtp_port: 25
+
+# Variables pour Roundcube - Dovecot
+roundcube_imap_host: "ssl://127.0.0.1"
+roundcube_imap_port: 993
+
+# Variables pour Roundcube - OpenLDAP
+roundcube_ldap_base_dn: "OU=Users_Network,DC=epitaf,DC=local"
+roundcube_ldap_bind_dn: "ad_user@epitaf.local"
+roundcube_ldap_bind_dn_bis: "CN=AD_User,OU={{ roundcube_ldap_base_dn }}"
+roundcube_ldap_bind_password: "REDACTED"
+
+
+roundcube_repo: https://github.com/roundcube/roundcubemail
+roundcube_version: 1.6.11
+
+roundcube_domain: blog.epitaf.local
+roundcube_user: www-data # roundcube
+roundcube_group: www-data
+
+roundcube_user_shell: /bin/false
+roundcube_user_home: "/var/www"
+roundcube_working_dir: "{{ roundcube_user_home }}"
+roundcube_path: "{{ roundcube_working_dir }}/mail"
+
+
+roundcube_imap_host: "ssl://{{ roundcube_domain }}:993"
+roundcube_skin: elastic
+roundcube_smtp_host: "ssl://{{ roundcube_domain }}:465"
+roundcube_smtp_user: "%u"
+roundcube_smtp_pass: "%p"
+roundcube_identities_level: 1
+roundcube_date_format: d.m.Y
+roundcube_cipher_method: AES-256-CBC
+roundcube_password_charset: UTF-8
+roundcube_sendmail_delay: 4
+roundcube_max_recipients: 250
+roundcube_draft_autosave: 60
+roundcube_des_key: ""
+
+roundcube_plugins:
+  - archive
+  - carddav
+  - enigma
+  - markasjunk
+  - managesieve
+  - zipdownload
+
+# list of additional configs, e.g. for plugins
+roundcube_configs_extra:
+  - plugins/enigma/config.inc.php
+  - plugins/managesieve/config.inc.php
+
+# enigma plugin settings
+roundcube_enigma_password_time: 5
+roundcube_enigma_home: "{{ roundcube_working_dir }}/enigma/home"
+roundcube_enigma_open_basedirs:
+  - "/usr/bin/gpg"
+  - "/usr/bin/gpg-agent"
+  - "/usr/bin/gpgconf"
+  - "/usr/local/bin/gpgconf"
+  - "{{ roundcube_enigma_home }}"
+
+# managesieve plugin settings
+roundcube_managesieve_default: /etc/dovecot/sieve/global
+roundcube_managesieve_script_name: roundcube
+
+roundcube_dependencies:
+  - php-intl
+  - libmcrypt-dev
+  - php-mysql
+  - php-curl  # rcmcarddav
+  - python3-mysqldb
+  - git
+
+# carddav
+roundcube_carddav_version: 4.4.2
+
+# Installer
+roundcube_enable_installer: false

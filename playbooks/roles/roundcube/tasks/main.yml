@@ -1,0 +1,101 @@
+---
+- name: Ensure mandatory variables are defined
+  ansible.builtin.assert:
+    that:
+      - roundcube_mysql_password is defined
+      - roundcube_des_key is defined
+
+- name: Ensure crontab is installed
+  ansible.builtin.apt:
+    pkg: "cron"
+    state: present
+
+- name: Ensure roundcube group is present
+  ansible.builtin.group:
+    name: "{{ roundcube_group }}"
+
+- name: Ensure roundcube user is present
+  ansible.builtin.user:
+    name: "{{ roundcube_user }}"
+    home: "{{ roundcube_user_home }}"
+    shell: "{{ roundcube_user_shell }}"
+    group: "{{ roundcube_group }}"
+
+- name: Install Roundcube dependencies
+  ansible.builtin.apt:
+    pkg: "{{ roundcube_dependencies }}"
+    state: present
+    install_recommends: False
+
+- name: Ensure database user is present
+  community.mysql.mysql_user:
+    name: "{{ roundcube_mysql_user }}"
+    password: "{{ roundcube_mysql_password }}"
+    priv: "{{ roundcube_mysql_db }}.*:ALL,GRANT"
+    state: present
+    login_unix_socket: /run/mysqld/mysqld.sock
+
+- name: Ensure database is present
+  community.mysql.mysql_db:
+    name: "{{ roundcube_mysql_db }}"
+    state: present
+    encoding: "utf8"
+    collation: "utf8_general_ci"
+    login_unix_socket: /run/mysqld/mysqld.sock
+  notify: Import database
+
+- name: Check if roundcube directory exists
+  ansible.builtin.stat:
+    path: "{{ roundcube_path }}"
+  register: "roundcube_directory_exists"
+
+- name: Get roundcube release
+  ansible.builtin.get_url:
+    url: "https://github.com/roundcube/roundcubemail/releases/download/{{ roundcube_version }}/roundcubemail-{{ roundcube_version }}-complete.tar.gz"
+    dest: "{{ roundcube_working_dir }}"
+    owner: "{{ roundcube_user }}"
+    group: "{{ roundcube_group }}"
+    mode: "0440"
+  when: not ansible_check_mode or not roundcube_directory_exists.stat.exists
+  register: download
+
+- name: Unarchive roundcube
+  ansible.builtin.unarchive:
+    src: "{{ roundcube_working_dir }}/roundcubemail-{{ roundcube_version }}-complete.tar.gz"
+    dest: "{{ roundcube_working_dir }}"
+    owner: "{{ roundcube_user }}"
+    group: "{{ roundcube_group }}"
+    mode: "0750"
+    copy: no
+  when: (download.changed) or
+    (roundcube_enable_installer | bool)
+  notify: Restart apache
+
+#- name: Rename roundcubemail directory to mail
+#  ansible.builtin.file:
+#    src: "{{ roundcube_working_dir }}/roundcubemail-{{ roundcube_version }}"
+#    dest: "{{ roundcube_path }}"
+#    state: hard
+#    owner: "{{ roundcube_user }}"
+#    group: "{{ roundcube_group }}"
+#    mode: "0750"
+#  when: not roundcube_directory_exists.stat.exists
+
+- name: Rename roundcubemail directory to mail
+  ansible.builtin.command: >
+    mv -f {{ roundcube_working_dir }}/roundcubemail-{{ roundcube_version }} {{ roundcube_path }}
+  args:
+    removes: "{{ roundcube_working_dir }}/roundcubemail-{{ roundcube_version }}"
+  when: download.changed or not roundcube_directory_exists.stat.exists
+
+- name: Configurer Roundcube
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    #dest: "/etc/roundcube/{{ item }}"
+    dest: "/var/www/mail/config/{{ item }}"
+    mode: "0644"
+    owner: "{{ roundcube_user }}"
+    group: "{{ roundcube_group }}"
+  loop:
+    - "config.inc.php"
+  tags: roundcube

@@ -1,0 +1,26 @@
+## Dovecot configuration file
+
+# Enable installed protocols
+protocols = imap
+listen = 127.0.0.1
+
+auth_mechanisms = plain login
+
+passdb {
+  driver = ldap
+  args = /etc/dovecot/dovecot-ldap.conf
+}
+
+# Logging
+log_path = /var/log/dovecot.log
+info_log_path = /var/log/dovecot-info.log
+
+# SSL configuration
+ssl = required
+ssl_cert = <{{ ssl_cert_path }}
+ssl_key = <{{ ssl_key_path }}
+ssl_prefer_server_ciphers = yes
+ssl_min_protocol = TLSv1.2
+
+# Include config files
+!include conf.d/*.conf
