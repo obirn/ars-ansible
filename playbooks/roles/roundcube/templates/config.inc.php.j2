@@ -14,8 +14,7 @@ $config['log_file'] = 'errors.log';
 // ----------------------------------------
 // POSTFIX CONFIGURATION FOR ROUNDCUBE
 // ----------------------------------------
-$config['smtp_server'] = '{{ roundcube_smtp_server }}';
-$config['smtp_port'] = {{ roundcube_smtp_port }};
+$config['smtp_host'] = '{{ roundcube_smtp_server }}:{{ roundcube_smtp_port }}';
 
 // Désactiver l'authentification SMTP anonyme
 $config['smtp_auth_type'] = 'LOGIN';
@@ -23,6 +22,12 @@ $config['smtp_auth_type'] = 'LOGIN';
 // Utiliser le même nom d'utilisateur et mot de passe pour IMAP et SMTP
 $config['smtp_user'] = '%u';
 $config['smtp_pass'] = '%p';
+
+$config['smtp_conn_options'] = null;
+
+// Forcer l'authentification SMTP
+$config['smtp_auth_cid'] = null;
+$config['smtp_auth_pw'] = null;
 
 $config['smtp_debug'] = true;
 
@@ -42,7 +47,6 @@ $config['imap_conn_options'] = array(
     'ssl' => array(
         'verify_peer' => false,
         'verify_peer_name' => false
-        #'allow_self_signed' => true
     )
 );
 $config['imap_debug'] = true;
@@ -51,7 +55,7 @@ $config['imap_debug'] = true;
 $config['create_default_folders'] = true;
 $config['default_imap_folders'] = array('INBOX', 'Drafts', 'Sent', 'Junk', 'Trash');
 
-// Désactiver la création automatique d'utilisateurs
+// Création automatique d'utilisateurs
 $config['auto_create_user'] = true;
 
 

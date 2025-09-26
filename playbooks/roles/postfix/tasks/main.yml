@@ -1,21 +1,38 @@
 ---
 - name: Installer Postfix
   ansible.builtin.apt:
-    name: postfix
+    name: "{{ item }}"
     state: present
     update_cache: yes
+  loop:
+    - postfix
+    - postfix-ldap
+  tags: installation
 
 - name: Configurer Postfix
   ansible.builtin.template:
-    src: main.cf.j2
-    dest: /etc/postfix/main.cf
+    src: "{{ item }}.j2"
+    dest: "/etc/postfix/{{ item }}"
     owner: root
     group: root
     mode: "0644"
+  loop:
+    - main.cf
+    - master.cf
+    - ldap-users.cf
+    - ldap-aliases.cf
   notify: Restart Postfix
+  tags: service
+
+- name: Tester la syntaxe de main.conf
+  command: postconf -n
+  register: config_test
+  changed_when: false
+  tags: configuration
 
 - name: Assurer que Postfix est démarré et activé
   ansible.builtin.service:
     name: postfix
     state: started
     enabled: yes
+  tags: service

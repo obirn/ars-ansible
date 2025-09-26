@@ -6,6 +6,6 @@ postfix_inet_interfaces: "loopback-only"
 postfix_mydestination: "$myhostname, localhost.$mydomain, localhost"
 postfix_relayhost:
 postfix_mynetworks: "127.0.0.0/8"
-postfix_smtpd_banner: "$myhostname ESMTP"
+postfix_smtpd_banner: "$myhostname ESMTP $mail_name"
 
 # Variables pour Roundcube

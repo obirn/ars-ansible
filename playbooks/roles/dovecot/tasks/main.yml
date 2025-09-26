@@ -64,9 +64,33 @@
     - "10-master.conf"
     - "10-ssl.conf"
     - "10-logging.conf"
+    - "20-lmtp.conf"
     - "auth-ldap.conf.ext"
     - "auth-system.conf.ext"
   notify: restart dovecot
+  tags: configuration
+
+- name: Configuration des permissions de dovecot.log
+  ansible.builtin.file:
+    path: "/var/log/{{ item }}"
+    owner: dovecot
+    group: root
+    mode: '0664'
+  become: yes
+  loop:
+    - dovecot.log
+    - dovecot-debug.log
+    - dovecot-info.log
+  tags: configuration
+
+- name: Configuration des permissions du dossier /run/dovecot
+  ansible.builtin.file:
+    path: /run/dovecot
+    state: directory
+    recurse: yes
+    owner: root
+    group: dovecot
+    mode: '755'
   tags: configuration
 
 - name: Tester la configuration de Dovecot

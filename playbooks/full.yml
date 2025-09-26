@@ -2,15 +2,15 @@
 - name: Load and execute every role
   hosts: webservers
   tasks:
-    #- name: Load and execute POSTFIX role
-    #  ansible.builtin.include_role:
-    #    name: postfix
+    - name: Load and execute POSTFIX role
+      ansible.builtin.include_role:
+        name: postfix
     - name: Load and execute DOVECOT role
       ansible.builtin.include_role:
         name: dovecot
-    - name: Load and execute OPENLDAP role
-      ansible.builtin.include_role:
-        name: openldap
+    #- name: Load and execute OPENLDAP role
+    #  ansible.builtin.include_role:
+    #    name: openldap
     - name: Load and execute ROUNDCUBE role
       ansible.builtin.include_role:
         name: roundcube

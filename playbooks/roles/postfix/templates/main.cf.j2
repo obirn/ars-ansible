@@ -1,8 +1,51 @@
 myhostname = {{ postfix_myhostname }}
 mydomain = {{ postfix_mydomain }}
 myorigin = $mydomain
+virtual_mailbox_domains = $mydomain
+
 inet_interfaces = {{ postfix_inet_interfaces }}
+mynetworks = {{ postfix_mynetworks }}
+
 mydestination = {{ postfix_mydestination }}
 relayhost = {{ postfix_relayhost }}
-mynetworks = {{ postfix_mynetworks }}
-smtpd_banner = {{ postfix_smtpd_banner }}
+
+smtpd_relay_restrictions = permit_mynetworks, reject_unauth_destination, defer_unauth_destination
+smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
+
+compatibility_level = 3.6
+
+maillog_file = /var/log/mail.log
+
+##home_mailbox = Maildir/
+##mailbox_command =
+
+
+# ========== LDAP DYNAMIQUE ==========
+virtual_mailbox_maps = ldap:/etc/postfix/ldap-users.cf
+virtual_alias_maps = ldap:/etc/postfix/ldap-aliases.cf
+
+# ========== DOVECOT TRANSPORT ==========
+#virtual_transport = dovecot
+virtual_transport = lmtp:unix:private/dovecot-lmtp
+#virtual_transport = maildir:/var/mail/vmail/$user@$domain/Maildir
+dovecot_destination_recipient_limit = 1
+virtual_mailbox_base = /var/mail/vmail
+virtual_uid_maps = static:5000
+virtual_gid_maps = static:5000
+virtual_minimum_uid = 5000
+
+
+# ========== SECURITE ==========
+#smtpd_banner = {{ postfix_smtpd_banner }}
+smtpd_banner = $myhostname ESMTP $mail_name
+biff = no
+append_dot_mydomain = no
+readme_directory = no
+
+
+# ========== AUTHENTIFICATION SASL ==========
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_security_options = noanonymous
+smtpd_sasl_local_domain = $myhostname

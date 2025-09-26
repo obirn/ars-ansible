@@ -31,6 +31,6 @@
   file:
     path: /var/mail/vmail
     owner: vmail
-    group: vmail
+    group: dovecot
     mode: '0750'
     recurse: yes

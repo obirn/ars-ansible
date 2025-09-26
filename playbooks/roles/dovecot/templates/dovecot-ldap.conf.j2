@@ -10,8 +10,8 @@ dnpass = REDACTED
 ldap_version = 3
 auth_bind = yes
 
-user_filter = (&(objectClass=user)(sAMAccountName=%u))
-pass_filter = (&(objectClass=user)(sAMAccountName=%u))
+user_filter = (&(objectClass=user)(sAMAccountName=%n))
+pass_filter = (&(objectClass=user)(sAMAccountName=%n))
 
 #user_attrs = maildir:~/Maildir
 user_attrs = =home=/var/mail/vmail/%u

@@ -12,9 +12,31 @@ service imap-login {
 }
 
 service auth {
-  unix_listener auth-userdb {
-    mode = 0666
+  unix_listener /var/spool/postfix/private/auth {
+    mode = 0660
     user = postfix
     group = postfix
   }
 }
+
+service lmtp {
+  unix_listener /var/spool/postfix/private/dovecot-lmtp {
+    mode = 0600
+    user = postfix
+    group = postfix
+  }
+}
+
+#service stats {
+#  unix_listener stats-writer {
+#    user = dovecot
+#    group = dovecot
+#    mode = 0660
+#  }
+#}
+
+#service anvil {
+#  unix_listener anvil {
+#    mode = 0660
+#  }
+#}
