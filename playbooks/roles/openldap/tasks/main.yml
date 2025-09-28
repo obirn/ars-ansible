@@ -53,7 +53,7 @@
 - name: Tester la connexion proxy locale
   command: >
     ldapsearch -x -H ldaps://{{ ad_server }}:{{ ad_port }} -b '{{ openldap_base_dn }}'
-    -D '{{ openldap_bind_dn }}' -w '{{ openldap_bind_password }}'
+    -D '{{ openldap_bind_mail }}' -w '{{ openldap_bind_password }}'
     '(sAMAccountName=ad_user)' dn
   register: proxy_test
   changed_when: false
@@ -67,7 +67,7 @@
 - name: Tester la résolution via le proxy
   command: >
     ldapsearch -x -H ldaps://{{ ad_server }}:{{ ad_port }} -b "{{ openldap_base_dn }}"
-    -D "{{ openldap_bind_dn }}" -w "{{ openldap_bind_password }}"
+    -D "{{ openldap_bind_mail }}" -w "{{ openldap_bind_password }}"
     "(sAMAccountName=ad_user)" cn mail
   register: resolution_test
   changed_when: false

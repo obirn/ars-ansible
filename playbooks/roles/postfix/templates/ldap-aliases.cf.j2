@@ -1,15 +1,12 @@
-# Alias et redirections
 server_host = 127.0.0.1
 server_port = 389
 version = 3
 
+# Authentification LDAP
 bind = yes
-bind_dn = cn=AD_User,ou=Users_Network,dc=epitaf,dc=local
-bind_pw = REDACTED
+bind_dn = {{ vault_ldap_proxy_bind_dn }}
+bind_pw = {{ vault_ldap_proxy_password }}
 
-search_base = ou=Users_Network,dc=epitaf,dc=local
+search_base = {{ ad_base_dn }}
 query_filter = (&(objectClass=user)(userPrincipalName=%s))
 result_attribute = sAMAccountName
-
-# Pour les alias : userA@epitaf.local -> userB@epitaf.local
-# (À adapter si tu as des groupes de distribution)

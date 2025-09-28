@@ -1,5 +1,5 @@
-<VirtualHost *:10001>
-    ServerName {{ http_host }}
+<VirtualHost localhost:10001>
+    ServerName localhost
     DocumentRoot {{ http_root }}/mail
 
     <Directory {{ http_root }}/mail>

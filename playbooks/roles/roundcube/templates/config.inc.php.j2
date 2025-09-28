@@ -19,7 +19,7 @@ $config['smtp_host'] = '{{ roundcube_smtp_server }}:{{ roundcube_smtp_port }}';
 // Désactiver l'authentification SMTP anonyme
 $config['smtp_auth_type'] = 'LOGIN';
 
-// Utiliser le même nom d'utilisateur et mot de passe pour IMAP et SMTP
+// Utiliser le même nom d'utilisateur et mot de passe pour SMTP
 $config['smtp_user'] = '%u';
 $config['smtp_pass'] = '%p';
 
@@ -31,12 +31,9 @@ $config['smtp_auth_pw'] = null;
 
 $config['smtp_debug'] = true;
 
-
 // ----------------------------------------
 // DOVECOT CONFIGURATION FOR ROUNDCUBE
 // ----------------------------------------
-##$config['default_host'] = 'ssl://127.0.0.1';
-##$config['default_port'] = 993;
 $config['default_host'] = '127.0.0.1';
 $config['default_port'] = 143;
 
@@ -64,25 +61,4 @@ $config['auto_create_user'] = true;
 // ----------------------------------------
 
 $config['login_ldap'] = false;
-/* $config['login_ldap'] = true;
-$config['ldap_public']['global'] = array(
-    'hosts' => array('127.0.0.1'),      // Proxy OpenLDAP local
-    'port' => 389,                      // Port standard LDAP
-    'base_dn' => '{{ roundcube_ldap_base_dn }}',
-    #'bind_dn' => '{{ roundcube_ldap_bind_dn_bis }}',
-    #'bind_pass' => '{{ roundcube_ldap_bind_password }}',
-    'bind_dn' => '{{ roundcube_ldap_bind_dn_bis }}',
-    'bind_pass' => '{{ roundcube_ldap_bind_password }}',
-    'user_specific' => false,
-    'search_fields' => array('sAMAccountName'),
-    #'search_fields' => array('mail', 'cn', 'sAMAccountName', 'userPrincipalName'),
-    'filter' => '(&(objectClass=user)(!(memberOf=CN=Domain Admins,CN=Users,DC=epitaf,DC=local)))',
-    'writable' => false,
-    'ldap_version' => 3,
-    'scope' => 'sub',
-    'encryption' => 'none',
-    'ssl_verify_peer' => false,
-    'ssl_verify_peer_name' => false
-);
-*/
 ?>

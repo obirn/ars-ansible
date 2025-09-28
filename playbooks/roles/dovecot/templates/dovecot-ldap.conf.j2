@@ -1,10 +1,10 @@
 # Configuration LDAP vers le proxy OpenLDAP
 
 uris = ldap://127.0.0.1:389
-base = OU=Users_Network,DC=epitaf,DC=local
+base = {{ ad_base_dn }}
 
-dn = CN=AD_User,OU=Users_Network,DC=epitaf,DC=local
-dnpass = REDACTED
+dn = {{ vault_ldap_proxy_bind_dn }}
+dnpass = {{ vault_ldap_proxy_password }}
 
 # Configuration LDAP
 ldap_version = 3

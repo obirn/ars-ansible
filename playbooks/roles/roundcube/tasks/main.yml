@@ -51,7 +51,7 @@
 
 - name: Get roundcube release
   ansible.builtin.get_url:
-    url: "https://github.com/roundcube/roundcubemail/releases/download/{{ roundcube_version }}/roundcubemail-{{ roundcube_version }}-complete.tar.gz"
+    url: "{{ roundcube_repo }}/releases/download/{{ roundcube_version }}/roundcubemail-{{ roundcube_version }}-complete.tar.gz"
     dest: "{{ roundcube_working_dir }}"
     owner: "{{ roundcube_user }}"
     group: "{{ roundcube_group }}"
@@ -71,16 +71,6 @@
     (roundcube_enable_installer | bool)
   notify: Restart apache
 
-#- name: Rename roundcubemail directory to mail
-#  ansible.builtin.file:
-#    src: "{{ roundcube_working_dir }}/roundcubemail-{{ roundcube_version }}"
-#    dest: "{{ roundcube_path }}"
-#    state: hard
-#    owner: "{{ roundcube_user }}"
-#    group: "{{ roundcube_group }}"
-#    mode: "0750"
-#  when: not roundcube_directory_exists.stat.exists
-
 - name: Rename roundcubemail directory to mail
   ansible.builtin.command: >
     mv -f {{ roundcube_working_dir }}/roundcubemail-{{ roundcube_version }} {{ roundcube_path }}
@@ -91,7 +81,6 @@
 - name: Configurer Roundcube
   ansible.builtin.template:
     src: "{{ item }}.j2"
-    #dest: "/etc/roundcube/{{ item }}"
     dest: "/var/www/mail/config/{{ item }}"
     mode: "0644"
     owner: "{{ roundcube_user }}"

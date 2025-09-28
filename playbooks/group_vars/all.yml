@@ -1,0 +1,5 @@
+---
+domain: "epitaf.local"
+
+ldap_base_dn: "DC=epitaf,DC=local"
+ad_base_dn: "OU=Users_Network,{{ ldap_base_dn }}"

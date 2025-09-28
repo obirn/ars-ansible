@@ -10,8 +10,8 @@ TLS_REQCERT never
 referrals = off
 
 # Bind credentials
-BINDDN  {{ openldap_bind_dn_bis }} #{{ ad_bind_dn }}
-BINDPW  {{ openldap_bind_password }} #{{ ad_bind_password }}
+BINDDN  {{ openldap_bind_dn }}
+BINDPW  {{ openldap_bind_password }}
 
 # Timeouts
 TIMELIMIT   30

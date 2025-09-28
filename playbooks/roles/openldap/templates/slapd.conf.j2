@@ -20,7 +20,7 @@ argsfile        /var/run/slapd/slapd.args
 # Proxy configuration to AD
 database        ldap
 suffix          "{{ openldap_base_dn }}"
-rootdn          "{{ openldap_bind_dn_bis }}"
+rootdn          "{{ openldap_bind_dn }}"
 rootpw          "{{ openldap_bind_password }}"
 
 
@@ -34,7 +34,7 @@ uri             ldaps://{{ ad_server }}:{{ ad_port }}/
 
 # Configuration d'authentification avancée
 idassert-bind   bindmethod=simple
-                binddn="{{ openldap_bind_dn_bis }}"
+                binddn="{{ openldap_bind_dn }}"
                 credentials="{{ openldap_bind_password }}"
                 mode=self
 

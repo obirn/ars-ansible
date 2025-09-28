@@ -1,6 +1,9 @@
 ---
 - name: Load and execute every role
   hosts: webservers
+  vars_files:
+    - group_vars/all.yml
+    - group_vars/vault.yml
   tasks:
     - name: Load and execute POSTFIX role
       ansible.builtin.include_role:
@@ -8,18 +11,18 @@
     - name: Load and execute DOVECOT role
       ansible.builtin.include_role:
         name: dovecot
-    #- name: Load and execute OPENLDAP role
-    #  ansible.builtin.include_role:
-    #    name: openldap
+    - name: Load and execute OPENLDAP role
+      ansible.builtin.include_role:
+        name: openldap
     - name: Load and execute ROUNDCUBE role
       ansible.builtin.include_role:
         name: roundcube
-    #- name: Load and execute APACHE role
-    #  ansible.builtin.include_role:
-    #    name: apache
-    #- name: Load and execute NGINX role
-    #  ansible.builtin.include_role:
-    #    name: nginx
+    - name: Load and execute APACHE role
+      ansible.builtin.include_role:
+        name: apache
+    - name: Load and execute NGINX role
+      ansible.builtin.include_role:
+        name: nginx
     #- name: Load and execute SSH role
     #  ansible.builtin.include_role:
     #    name: ssh
