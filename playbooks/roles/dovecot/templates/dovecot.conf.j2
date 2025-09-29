@@ -15,12 +15,5 @@ passdb {
 log_path = /var/log/dovecot.log
 info_log_path = /var/log/dovecot-info.log
 
-# SSL configuration
-ssl = required
-ssl_cert = <{{ ssl_cert_path }}
-ssl_key = <{{ ssl_key_path }}
-ssl_prefer_server_ciphers = yes
-ssl_min_protocol = TLSv1.2
-
 # Include config files
 !include conf.d/*.conf
